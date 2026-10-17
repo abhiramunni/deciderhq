@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DeciderHQ — IND vs WI T20 Decider Fan Hub</title>
+<meta name="description" content="Your match-day hub for the India vs West Indies 5th T20I series decider: live countdown, prediction game, series story, squad, quiz and more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0d0a06; --night2:#16100a; --pitch:#1e160d;
+  --cream:#faf3e7; --cream-dim:#e9dcc3; --muted:#a8977a;
+  --gold:#f0a832; --gold-deep:#c77f1a; --ember:#ff7a2f;
+  --ind:#2f5fe0; --ind-deep:#1c3ca8; --maroon:#8c2434;
+  --green:#2e9e5b; --red:#e05252;
+  --card:#17120b; --line:#2c2214;
+  --shadow:0 18px 50px rgba(0,0,0,.5);
+  --r:18px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--night); color:var(--cream); font-family:Inter,system-ui,sans-serif; line-height:1.55; overflow-x:hidden}
+h1,h2,h3,.serif{font-family:Fraunces,Georgia,serif; line-height:1.12; letter-spacing:-.01em}
+button{font-family:inherit}
+::selection{background:var(--gold); color:#201304}
+
+/* ---------- INTRO ---------- */
+#intro{position:fixed; inset:0; z-index:2000; background:#070503; display:flex; align-items:center; justify-content:center; flex-direction:column; cursor:pointer; transition:opacity .7s ease}
+#intro.done{opacity:0; pointer-events:none}
+#intro canvas{position:absolute; inset:0; width:100%; height:100%}
+.intro-core{position:relative; text-align:center; z-index:2; animation:introUp 1.2s cubic-bezier(.2,.9,.2,1) both}
+@keyframes introUp{from{opacity:0; transform:translateY(34px)} to{opacity:1; transform:none}}
+.intro-eyebrow{font-size:11px; letter-spacing:.42em; text-transform:uppercase; color:var(--gold)}
+.intro-title{font-family:Fraunces,serif; font-weight:900; font-size:clamp(46px,9vw,96px); margin:10px 0 4px; background:linear-gradient(180deg,#fff6e3,#f0a832 70%); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 80px rgba(240,168,50,.25)}
+.intro-sub{color:var(--cream-dim); font-size:15px; max-width:420px; margin:0 auto; padding:0 24px}
+.intro-bar{width:210px; height:3px; background:#2c2214; border-radius:99px; margin:26px auto 12px; overflow:hidden}
+.intro-bar i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--gold),var(--ember)); border-radius:99px; animation:fill 4s linear forwards}
+@keyframes fill{to{width:100%}}
+.intro-skip{font-size:12px; color:var(--muted); letter-spacing:.18em; text-transform:uppercase; border:1px solid var(--line); padding:9px 22px; border-radius:99px; background:rgba(0,0,0,.45)}
+.intro-hint{position:absolute; bottom:26px; font-size:11px; color:#6f6046; letter-spacing:.2em; text-transform:uppercase}
+
+/* ---------- MATCH STRIP ---------- */
+#strip{position:sticky; top:0; z-index:900; background:rgba(13,10,6,.86); backdrop-filter:blur(14px); border-bottom:1px solid var(--line)}
+.strip-in{max-width:1100px; margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:12px}
+.strip-live{display:flex; align-items:center; gap:8px; font-weight:800; font-size:13px; letter-spacing:.06em}
+.pulse{width:9px; height:9px; border-radius:50%; background:var(--red); box-shadow:0 0 0 0 rgba(224,82,82,.7); animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 12px rgba(224,82,82,0)} 100%{box-shadow:0 0 0 0 rgba(224,82,82,0)}}
+.strip-vs{margin-left:auto; display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700}
+.team-pill{padding:4px 12px; border-radius:99px; font-size:12px; font-weight:800}
+.tp-ind{background:linear-gradient(135deg,var(--ind),var(--ind-deep)); color:#fff}
+.tp-wi{background:linear-gradient(135deg,var(--maroon),#5c1622); color:#fff}
+.strip-cd{font-variant-numeric:tabular-nums; font-size:13px; color:var(--gold); font-weight:700; white-space:nowrap}
+#rail{display:flex; gap:6px; overflow-x:auto; padding:0 16px 10px; max-width:1100px; margin:0 auto; scrollbar-width:none}
+#rail::-webkit-scrollbar{display:none}
+#rail a{flex:0 0 auto; font-size:12.5px; font-weight:600; color:var(--cream-dim); text-decoration:none; padding:7px 14px; border:1px solid var(--line); border-radius:99px; background:var(--card)}
+#rail a:hover{border-color:var(--gold); color:var(--gold)}
+
+/* ---------- HERO ---------- */
+#hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line)}
+#heroCanvas{position:absolute; inset:0; width:100%; height:100%; opacity:.9}
+.hero-in{position:relative; max-width:1100px; margin:0 auto; padding:64px 20px 46px; text-align:center}
+.hero-kicker{display:inline-flex; align-items:center; gap:10px; font-size:12px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); border:1px solid rgba(240,168,50,.4); padding:8px 18px; border-radius:99px; background:rgba(240,168,50,.08)}
+.hero-in h1{font-size:clamp(38px,7vw,74px); font-weight:900; margin:22px 0 6px}
+.hero-in h1 .alt{background:linear-gradient(90deg,var(--gold),var(--ember)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.hero-meta{color:var(--cream-dim); font-size:15px; max-width:560px; margin:0 auto}
+.countdown{display:flex; gap:10px; justify-content:center; margin:30px 0 8px; flex-wrap:wrap}
+.tile{background:linear-gradient(180deg,#241a0e,#14100a); border:1px solid var(--line); border-top:2px solid var(--gold); border-radius:14px; min-width:78px; padding:14px 8px 10px; box-shadow:var(--shadow)}
+.tile b{display:block; font-family:Fraunces,serif; font-size:38px; font-weight:900; color:var(--cream); font-variant-numeric:tabular-nums}
+.tile span{font-size:10.5px; letter-spacing:.24em; text-transform:uppercase; color:var(--muted)}
+.cd-note{font-size:13px; color:var(--muted)}
+.factbar{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:22px}
+.factbar div{background:rgba(23,18,11,.85); border:1px solid var(--line); border-radius:12px; padding:10px 16px; font-size:13px}
+.factbar b{color:var(--gold)}
+
+/* ---------- SECTIONS ---------- */
+.wrap{max-width:1100px; margin:0 auto; padding:0 20px}
+section.block{padding:56px 0 8px; scroll-margin-top:120px}
+.sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:6px; flex-wrap:wrap}
+.sec-num{font-family:Fraunces,serif; font-weight:900; font-size:15px; color:var(--night); background:var(--gold); width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto}
+.sec-head h2{font-size:clamp(26px,4vw,38px); font-weight:800; margin:0}
+.sec-sub{color:var(--muted); font-size:14.5px; max-width:640px; margin:2px 0 26px}
+.helper{font-size:13px; color:var(--muted); background:rgba(240,168,50,.06); border:1px dashed rgba(240,168,50,.35); border-radius:12px; padding:10px 14px; margin-bottom:18px}
+
+/* zigzag feature rows */
+.zrow{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:stretch; margin-bottom:22px}
+.zrow.flip .zcard{order:2}
+@media(max-width:760px){.zrow{grid-template-columns:1fr}.zrow.flip .zcard{order:0}}
+.zcard{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:28px; position:relative; overflow:hidden; box-shadow:var(--shadow)}
+.zcard::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:linear-gradient(90deg,var(--gold),var(--ember),transparent)}
+.zcard h3{margin:0 0 8px; font-size:22px; font-weight:800}
+.zcard p{color:var(--cream-dim); font-size:14.5px; margin:0 0 10px}
+.bigstat{font-family:Fraunces,serif; font-weight:900; font-size:56px; color:var(--gold); line-height:1}
+.stat-cap{font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-top:6px}
+.zvisual{border-radius:var(--r); min-height:230px; position:relative; overflow:hidden; border:1px solid var(--line); background:#0f0b07; display:flex; align-items:center; justify-content:center}
+.zvisual canvas{position:absolute; inset:0; width:100%; height:100%}
+
+/* series timeline */
+.timeline{position:relative; margin:10px 0 30px; padding-left:30px}
+.timeline::before{content:""; position:absolute; left:9px; top:8px; bottom:8px; width:2px; background:linear-gradient(180deg,var(--ind),var(--gold),var(--maroon))}
+.tnode{position:relative; background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:20px 22px; margin-bottom:16px}
+.tnode::before{content:""; position:absolute; left:-27px; top:22px; width:12px; height:12px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(240,168,50,.18)}
+.tnode.wi::before{background:var(--maroon); box-shadow:0 0 0 4px rgba(140,36,52,.22)}
+.tnode .twhen{font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted)}
+.tnode h3{margin:6px 0 4px; font-size:20px}
+.tnode p{margin:0; color:var(--cream-dim); font-size:14px}
+.tnode .tscore{display:inline-block; margin-top:8px; font-weight:800; font-size:13px; padding:5px 12px; border-radius:99px; background:rgba(240,168,50,.12); border:1px solid rgba(240,168,50,.35); color:var(--gold)}
+.src{font-size:12px; color:#7d6c4f; margin-top:26px}
+.src a{color:var(--gold); text-decoration:none; border-bottom:1px dotted var(--gold)}
+
+/* squad carousel */
+.squad-rail{display:flex; gap:14px; overflow-x:auto; padding:6px 2px 18px; scroll-snap-type:x mandatory; scrollbar-width:thin}
+.pcard{flex:0 0 170px; scroll-snap-align:start; background:linear-gradient(180deg,#1d150b,#120d07); border:1px solid var(--line); border-radius:16px; padding:18px 14px; text-align:center; transition:transform .25s ease, border-color .25s ease}
+.pcard:hover{transform:translateY(-6px); border-color:var(--gold)}
+.pavatar{width:64px; height:64px; margin:0 auto 10px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Fraunces,serif; font-weight:900; font-size:24px; color:#fff; background:linear-gradient(135deg,var(--ind),var(--ind-deep)); border:2px solid rgba(255,255,255,.15)}
+.pcard b{display:block; font-size:14px}
+.pcard .cap{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-top:4px; display:block}
+.pcard .role{font-size:12px; color:var(--muted)}
+
+/* predictor */
+.pred-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+@media(max-width:760px){.pred-grid{grid-template-columns:1fr}}
+.qcard{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:22px}
+.qcard h3{font-size:16px; margin:0 0 4px; font-family:Inter,sans-serif; font-weight:700}
+.qcard .qhelp{font-size:12.5px; color:var(--muted); margin-bottom:12px}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opt{border:1px solid var(--line); background:#100c07; color:var(--cream); border-radius:99px; padding:9px 16px; font-size:13.5px; font-weight:600; cursor:pointer; transition:all .2s}
+.opt:hover{border-color:var(--gold)}
+.opt.sel{background:linear-gradient(135deg,var(--gold),var(--gold-deep)); color:#241500; border-color:var(--gold); font-weight:800}
+.opt:disabled{opacity:.55; cursor:default}
+.pred-actions{display:flex; gap:12px; margin-top:22px; flex-wrap:wrap}
+.btn{border:none; border-radius:99px; padding:13px 26px; font-size:14.5px; font-weight:800; cursor:pointer; transition:transform .15s ease}
+.btn:active{transform:scale(.96)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--ember)); color:#241500; box-shadow:0 10px 28px rgba(240,168,50,.3)}
+.btn-ghost{background:transparent; color:var(--cream-dim); border:1px solid var(--line)}
+.pred-result{background:linear-gradient(180deg,#211809,#14100a); border:1px solid var(--gold); border-radius:var(--r); padding:26px; margin-top:20px; display:none}
+.pred-result.show{display:block; animation:introUp .5s both}
+.pred-result h3{margin:0 0 6px; font-size:21px}
+.score-big{font-family:Fraunces,serif; font-size:52px; font-weight:900; color:var(--gold)}
+.score-line{font-size:14px; color:var(--cream-dim); margin:4px 0 14px}
+.score-row{display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-top:1px dashed var(--line); font-size:13.5px}
+.score-row .pts{font-weight:800; color:var(--gold)}
+.empty{border:1px dashed var(--line); border-radius:var(--r); padding:26px; text-align:center; color:var(--muted); font-size:14px}
+
+/* quiz */
+#quizBox{background:var(--card); border:1px solid var(--line); border-radius:22px; padding:30px; box-shadow:var(--shadow); position:relative; overflow:hidden}
+#quizBox::before{content:""; position:absolute; inset:0 0 auto 0; height:4px; background:linear-gradient(90deg,var(--ind),var(--gold),var(--maroon))}
+.qprog{height:6px; background:#241c10; border-radius:99px; overflow:hidden; margin-bottom:20px}
+.qprog i{display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--ember)); width:0; transition:width .4s}
+#quizQ{font-size:19px; font-weight:700; margin:0 0 16px; font-family:Inter,sans-serif}
+.qbtns{display:grid; gap:10px}
+.qbtn{text-align:left; background:#100c07; border:1px solid var(--line); color:var(--cream); border-radius:12px; padding:13px 16px; font-size:14.5px; cursor:pointer; transition:all .18s}
+.qbtn:hover:not(:disabled){border-color:var(--gold); transform:translateX(4px)}
+.qbtn.right{background:rgba(46,158,91,.15); border-color:var(--green); color:#c9f0d8}
+.qbtn.wrong{background:rgba(224,82,82,.12); border-color:var(--red); color:#f3c1c1}
+.qbtn:disabled{cursor:default; opacity:.85}
+#quizExplain{font-size:13.5px; color:var(--cream-dim); background:rgba(240,168,50,.07); border-radius:12px; padding:12px 16px; margin-top:14px; display:none}
+.quiz-foot{display:flex; justify-content:space-between; align-items:center; margin-top:20px}
+#quizScore{font-weight:800; color:var(--gold)}
+
+/* roar */
+#roarSec{text-align:center; background:radial-gradient(ellipse at 50% 0%, #241809 0%, var(--night) 65%); border:1px solid var(--line); border-radius:26px; padding:44px 24px; margin:56px 0 20px; position:relative; overflow:hidden}
+#roarSec canvas{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
+#roarMeterWrap{width:min(420px,86%); height:22px; background:#241c10; border:1px solid var(--line); border-radius:99px; margin:22px auto; overflow:hidden; position:relative}
+#roarFill{height:100%; width:0%; background:linear-gradient(90deg,var(--gold),var(--ember),#ff4d4d); border-radius:99px; transition:width .18s}
+#roarBtn{position:relative; z-index:2; width:150px; height:150px; border-radius:50%; border:4px solid var(--gold); background:radial-gradient(circle at 35% 30%, #3a2a12, #191106); color:var(--gold); font-family:Fraunces,serif; font-weight:900; font-size:19px; cursor:pointer; box-shadow:0 0 44px rgba(240,168,50,.35); transition:transform .1s}
+#roarBtn:active{transform:scale(.93)}
+#roarCount{font-size:13px; color:var(--muted); margin-top:14px; position:relative}
+
+/* drawer */
+#drawer{position:fixed; right:0; top:0; bottom:0; width:min(380px,92vw); background:#14100a; border-left:1px solid var(--line); z-index:1500; transform:translateX(105%); transition:transform .35s cubic-bezier(.2,.9,.25,1); display:flex; flex-direction:column}
+#drawer.open{transform:none}
+.drawer-h{padding:20px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between}
+.drawer-h b{font-family:Fraunces,serif; font-size:19px}
+.drawer-b{padding:20px; overflow-y:auto; flex:1}
+#drawerFab{position:fixed; right:18px; bottom:18px; z-index:1400; background:linear-gradient(135deg,var(--gold),var(--ember)); color:#241500; border:none; border-radius:99px; padding:14px 22px; font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 12px 30px rgba(240,168,50,.4); display:flex; align-items:center; gap:8px}
+.scrim{position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:1450; opacity:0; pointer-events:none; transition:opacity .3s}
+.scrim.show{opacity:1; pointer-events:auto}
+
+/* onboarding */
+#coach{position:fixed; left:50%; transform:translateX(-50%) translateY(20px); bottom:86px; z-index:1600; background:#1e160c; border:1px solid var(--gold); border-radius:16px; padding:16px 18px; max-width:min(430px,90vw); box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:all .4s}
+#coach.show{opacity:1; pointer-events:auto; transform:translateX(-50%)}
+#coach p{margin:0 0 12px; font-size:14px}
+#coach .cbtns{display:flex; gap:8px; justify-content:flex-end}
+#coach .cbtns button{border-radius:99px; padding:8px 18px; font-size:13px; font-weight:700; cursor:pointer}
+#cNext{background:var(--gold); border:none; color:#241500}
+#cSkip{background:transparent; border:1px solid var(--line); color:var(--cream-dim)}
+
+/* tooltip */
+.tip{position:relative; border-bottom:1px dotted var(--gold); cursor:help}
+.tip::after{content:attr(data-tip); position:absolute; left:50%; bottom:130%; transform:translateX(-50%) translateY(6px); background:#241a0d; border:1px solid var(--gold); color:var(--cream); font-size:12px; padding:8px 12px; border-radius:10px; width:210px; opacity:0; pointer-events:none; transition:all .25s; z-index:50}
+.tip:hover::after{opacity:1; transform:translateX(-50%)}
+
+footer{border-top:1px solid var(--line); margin-top:60px; padding:30px 20px 60px; text-align:center; color:var(--muted); font-size:12.5px}
+footer a{color:var(--gold); text-decoration:none}
+.reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease}
+.reveal.in{opacity:1; transform:none}
+.icon{width:18px; height:18px; vertical-align:-3px}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro" role="button" aria-label="Skip intro" tabindex="0">
+  <canvas id="introCanvas"></canvas>
+  <div class="intro-core">
+    <div class="intro-eyebrow">The Series Decider</div>
+    <div class="intro-title">DeciderHQ</div>
+    <p class="intro-sub">India vs West Indies, 5th T20I — your match-day hub for the Bengaluru showdown. Tap anywhere to enter.</p>
+    <div class="intro-bar"><i></i></div>
+    <span class="intro-skip">Tap to skip</span>
+  </div>
+  <div class="intro-hint">Loading match-day…</div>
+</div>
+
+<!-- MATCH STRIP -->
+<header id="strip">
+  <div class="strip-in">
+    <div class="strip-live"><span class="pulse"></span>DECIDER</div>
+    <div class="strip-vs"><span class="team-pill tp-ind">IND</span><span style="color:var(--muted)">vs</span><span class="team-pill tp-wi">WI</span></div>
+    <div class="strip-cd" id="stripCd">--:--:--</div>
+  </div>
+  <nav id="rail" aria-label="Sections">
+    <a href="#countdown-sec">Countdown</a><a href="#predict">Predictor</a><a href="#series">Series Story</a>
+    <a href="#squad">Squad</a><a href="#quiz-sec">Quiz</a><a href="#conditions">Conditions</a><a href="#roar">Roar Meter</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-in">
+    <span class="hero-kicker">Series level 2–2 · Winner takes all</span>
+    <h1>The Bengaluru <span class="alt">Decider</span></h1>
+    <p class="hero-meta">Saturday, 17 October 2026 · 7:00 PM IST · M. Chinnaswamy Stadium · Live on JioStar &amp; JioHotstar. Make your predictions, relive the series, and test your cricket brain before the first ball.</p>
+    <div class="countdown" id="countdown-sec" aria-label="Countdown to first ball">
+      <div class="tile"><b id="cdD">0</b><span>Days</span></div>
+      <div class="tile"><b id="cdH">0</b><span>Hours</span></div>
+      <div class="tile"><b id="cdM">0</b><span>Mins</span></div>
+      <div class="tile"><b id="cdS">0</b><span>Secs</span></div>
+    </div>
+    <p class="cd-note" id="cdNote">Until the first ball at Chinnaswamy. Toss at approx. 6:30 PM IST.</p>
+    <div class="factbar">
+      <div><b>4th T20I</b> · WI won by 24 runs</div>
+      <div><b>Hope 102*</b> off 50 balls</div>
+      <div><b>Paul 5-fer</b> in Hyderabad</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- PREDICTOR -->
+  <section class="block reveal" id="predict">
+    <div class="sec-head"><span class="sec-num">1</span><h2>The Predictor Game</h2></div>
+    <p class="sec-sub">Five calls. Twenty points each. Lock in your predictions before the first ball — then come back after the match, enter what actually happened, and see how sharp your cricket brain is.</p>
+    <div class="helper">Tip: your picks are saved on this device only (no account needed). After the match, use "Score my predictions" and pick the real outcomes from the dropdowns — DeciderHQ does the maths.</div>
+    <div class="pred-grid" id="predGrid"></div>
+    <div class="pred-actions">
+      <button class="btn btn-gold" id="savePreds">Save my predictions</button>
+      <button class="btn btn-ghost" id="clearPreds">Clear</button>
+      <button class="btn btn-ghost" id="scoreBtn">Score my predictions</button>
+    </div>
+    <div class="pred-result" id="scoreBox" aria-live="polite">
+      <h3>Your scorecard</h3>
+      <div class="score-big" id="scoreBig">0<span style="font-size:22px;color:var(--muted)">/100</span></div>
+      <p class="score-line" id="scoreLine"></p>
+      <div id="scoreRows"></div>
+      <div class="helper" style="margin:16px 0 0">Pick the actual outcomes honestly — this is a fan game, and the only prize is bragging rights.</div>
+    </div>
+  </section>
+
+  <!-- SERIES STORY -->
+  <section class="block reveal" id="series">
+    <div class="sec-head"><span class="sec-num">2</span><h2>The Series Story</h2></div>
+    <p class="sec-sub">Four games, four twists — how we got to a decider.</p>
+    <div class="timeline">
+      <div class="tnode">
+        <div class="twhen">1st T20I · Lucknow</div>
+        <h3>India strike first</h3>
+        <p>India opened the series with an eight-wicket win in the Lucknow opener — a statement start in front of a home crowd.</p>
+        <span class="tscore">IND lead 1–0</span>
+      </div>
+      <div class="tnode wi">
+        <div class="twhen">2nd T20I · Ranchi</div>
+        <h3>West Indies hit back</h3>
+        <p>The visitors levelled the series in Ranchi, showing the fight that has defined this tour. Shai Hope's side refused to roll over.</p>
+        <span class="tscore">Level 1–1</span>
+      </div>
+      <div class="tnode">
+        <div class="twhen">3rd T20I · Indore</div>
+        <h3>India's all-round brilliance</h3>
+        <p>Indore brought another stroke of brilliance from an all-round Indian attack, and the hosts retook the lead with the decider looming.</p>
+        <span class="tscore">IND lead 2–1</span>
+      </div>
+      <div class="tnode wi">
+        <div class="twhen">4th T20I · Hyderabad</div>
+        <h3>Hope's hundred sets up the decider</h3>
+        <p>Shai Hope's unbeaten 102 off 50 powered West Indies to 247/3; Keemo Paul's five-wicket haul then restricted India to 223. A 24-run win — and we go to Bengaluru all square.</p>
+        <span class="tscore">Level 2–2 · Decider on</span>
+      </div>
+    </div>
+    <p class="src">Series facts from match coverage on 16 Oct 2026 (Reuters, Cricbuzz, CricTracker). Full previews: <a href="https://www.cricbuzz.com/live-cricket-scores/151602/5th-t20i-west-indies-tour-of-india-2026" target="_blank" rel="noopener">Cricbuzz match page</a> · <a href="https://www.crictracker.com/cricket-match-predictions/india-vs-west-indies-match-prediction-5th-t20i-who-will-win-todays-match-between-ind-vs-wi-4376/" target="_blank" rel="noopener">CricTracker preview</a></p>
+  </section>
+
+  <!-- SQUAD -->
+  <section class="block reveal" id="squad">
+    <div class="sec-head"><span class="sec-num">3</span><h2>India's Squad</h2></div>
+    <p class="sec-sub">The 16 names in the mix for the decider — scroll sideways to meet them all. Bhuvneshwar Kumar has been added as cover for Arshdeep Singh (shoulder blow in Hyderabad).</p>
+    <div class="squad-rail" id="squadRail" aria-label="India squad"></div>
+    <p class="src">Squad list as reported 16 Oct 2026. Playing XI is named at the toss — DeciderHQ doesn't guess it.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="block reveal" id="quiz-sec">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Decider Quiz</h2></div>
+    <p class="sec-sub">Eight questions — series facts plus T20 know-how. One tap per question; explanations included so you actually learn something.</p>
+    <div class="helper" id="quizHelper">Question 1 of 8 — tap the answer you think is right.</div>
+    <div id="quizBox">
+      <div class="qprog"><i id="qProgFill"></i></div>
+      <h3 id="quizQ"></h3>
+      <div class="qbtns" id="quizBtns"></div>
+      <div id="quizExplain"></div>
+      <div class="quiz-foot">
+        <span id="quizScore">Score: 0</span>
+        <button class="btn btn-gold" id="quizNext" style="display:none">Next question</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONDITIONS -->
+  <section class="block reveal" id="conditions">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Conditions Watch</h2></div>
+    <p class="sec-sub">What the reports say about Saturday evening at Chinnaswamy — and why the toss could matter as much as the cricket.</p>
+    <div class="zrow">
+      <div class="zcard">
+        <h3>Rain &amp; Dew</h3>
+        <p>Bengaluru is forecast for cloudy skies with spells of rain or thundershowers on match day, and a thunderstorm warning has been issued. If rain interrupts play, overs are reduced and the Duckworth-Lewis-Stern method decides it.</p>
+        <p>Evening dew is the other big factor — a wet ball is hard to grip, which usually helps the team batting second. Expect the toss-winning captain to think hard about <span class="tip" data-tip="Chasing means batting second — trying to reach the target the other team set.">chasing</span>.</p>
+      </div>
+      <div class="zvisual"><canvas id="dewCanvas"></canvas></div>
+    </div>
+    <div class="zrow flip">
+      <div class="zcard">
+        <h3>The Chinnaswamy Factor</h3>
+        <p>This is a batter's paradise: flat, hard pitch and short boundaries. Chasing sides have won seven of the last ten T20 games here, and the tour's chasing trend is expected to continue.</p>
+        <p><span class="bigstat">7/10</span></p>
+        <p class="stat-cap">Recent T20s at this venue won by the chasing side</p>
+      </div>
+      <div class="zvisual"><canvas id="pitchCanvas"></canvas></div>
+    </div>
+    <p class="src">Conditions summary from CricTracker/Cricbuzz previews published 16 Oct 2026 — always check the latest forecast on match day.</p>
+  </section>
+
+  <!-- ROAR -->
+  <section class="block reveal" id="roar">
+    <div id="roarSec">
+      <canvas id="roarCanvas"></canvas>
+      <div class="sec-head" style="justify-content:center"><span class="sec-num">6</span><h2>The Roar Meter</h2></div>
+      <p class="sec-sub" style="text-align:center; margin-left:auto; margin-right:auto">Warm up your match-day voice. Tap the button as fast as you can — fill the meter and set off the stadium fireworks.</p>
+      <div id="roarMeterWrap"><div id="roarFill"></div></div>
+      <button id="roarBtn" aria-label="Tap to roar">ROAR</button>
+      <p id="roarCount">Taps: 0 · Best: 0</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  DeciderHQ — a fan-made match-day hub. Not affiliated with the BCCI, Cricket West Indies or any broadcaster.<br>
+  Match facts: Reuters, Cricbuzz &amp; CricTracker coverage, 16 Oct 2026. Predictions and quiz scores are stored only in your browser.<br>
+  Built with a single HTML file · <a href="https://abhiramunni.github.io/" target="_blank" rel="noopener">more apps by Abhiram</a>
+</footer>
+
+<button id="drawerFab" aria-label="Open my predictions">
+  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg>
+  My picks
+</button>
+<div class="scrim" id="scrim"></div>
+<aside id="drawer" aria-label="My predictions">
+  <div class="drawer-h"><b>My predictions</b><button class="btn btn-ghost" id="drawerClose" style="padding:8px 16px">Close</button></div>
+  <div class="drawer-b" id="drawerBody"></div>
+</aside>
+
+<div id="coach" role="dialog" aria-label="Quick tour">
+  <p id="coachText"></p>
+  <div class="cbtns"><button id="cSkip">Skip tour</button><button id="cNext">Next</button></div>
+</div>
+
+<script>
+"use strict";
+/* ============ helpers ============ */
+const $=id=>document.getElementById(id);
+const store={
+  get(k,d){try{const v=localStorage.getItem("deciderhq_"+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("deciderhq_"+k,JSON.stringify(v))}catch(e){}}
+};
+const MATCH_TS=new Date("2026-10-17T19:00:00+05:30").getTime();
+
+/* ============ intro canvas: floodlight sweeps ============ */
+(function(){
+  const c=$("introCanvas"),x=c.getContext("2d");let t=0,raf;
+  function size(){c.width=c.offsetWidth;c.height=c.offsetHeight}
+  size();addEventListener("resize",size);
+  function draw(){
+    t+=0.016;
+    x.fillStyle="#070503";x.fillRect(0,0,c.width,c.height);
+    const cx=c.width/2,cy=c.height*0.72;
+    for(let i=0;i<5;i++){
+      const a=Math.sin(t*0.7+i*1.3)*0.9+(i-2)*0.35;
+      const g=x.createLinearGradient(cx,cy,cx+Math.cos(a)*c.height,cy+Math.sin(a)*c.height);
+      g.addColorStop(0,"rgba(240,168,50,0.20)");g.addColorStop(1,"rgba(240,168,50,0)");
+      x.fillStyle=g;x.beginPath();x.moveTo(cx,cy);
+      x.arc(cx,cy,c.height*1.2,a-0.16,a+0.16);x.closePath();x.fill();
+    }
+    // crowd dots
+    x.fillStyle="rgba(240,168,50,0.5)";
+    for(let i=0;i<90;i++){
+      const px=(i*97.3)%c.width, py=cy+((i*57.7)%(c.height-cy))+Math.sin(t*2+i)*3;
+      x.globalAlpha=0.15+0.35*Math.abs(Math.sin(t*3+i*2));
+      x.fillRect(px,py,2.4,2.4);
+    }
+    x.globalAlpha=1;
+    raf=requestAnimationFrame(draw);
+  }
+  draw();
+  let done=false;
+  function finish(){if(done)return;done=true;$("intro").classList.add("done");cancelAnimationFrame(raf);setTimeout(()=>$("intro").remove(),800);maybeCoach()}
+  $("intro").addEventListener("click",finish);
+  $("intro").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();finish()}});
+  setTimeout(finish,4200);
+})();
+
+/* ============ hero canvas: night stadium ============ */
+(function(){
+  const c=$("heroCanvas"),x=c.getContext("2d");let t=0;
+  function size(){const r=c.parentElement.getBoundingClientRect();c.width=r.width;c.height=r.height}
+  size();addEventListener("resize",size);
+  function draw(){
+    t+=0.016;const w=c.width,h=c.height;
+    const g=x.createLinearGradient(0,0,0,h);
+    g.addColorStop(0,"#0d0a06");g.addColorStop(0.62,"#141009");g.addColorStop(0.63,"#0f1a10");g.addColorStop(1,"#0c150d");
+    x.fillStyle=g;x.fillRect(0,0,w,h);
+    // floodlight towers
+    for(const fx of [w*0.12,w*0.88]){
+      x.fillStyle="#241c10";x.fillRect(fx-4,h*0.12,8,h*0.5);
+      x.fillStyle="rgba(240,220,160,0.95)";
+      for(let r=0;r<3;r++)for(let q=0;q<4;q++){x.beginPath();x.arc(fx-18+q*12,h*0.10+r*11,3.4,0,7);x.fill()}
+      const beam=x.createLinearGradient(fx,h*0.14,fx,h*0.62);
+      beam.addColorStop(0,"rgba(240,200,110,0.16)");beam.addColorStop(1,"rgba(240,200,110,0)");
+      x.fillStyle=beam;
+      x.beginPath();x.moveTo(fx-30,h*0.12);x.lineTo(fx+30,h*0.12);x.lineTo(fx+120,h*0.62);x.lineTo(fx-120,h*0.62);x.closePath();x.fill();
+    }
+    // crowd shimmer
+    for(let i=0;i<160;i++){
+      const px=(i*53.7)%w, py=h*0.68+((i*91.3)%(h*0.3));
+      x.fillStyle=Math.random()<0.5?"rgba(240,168,50,0.35)":"rgba(47,95,224,0.35)";
+      x.globalAlpha=0.25+0.3*Math.abs(Math.sin(t*2.4+i*1.7));
+      x.fillRect(px,py,3,3);
+    }
+    x.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============ countdown ============ */
+function tick(){
+  const now=Date.now();let d=Math.max(0,MATCH_TS-now);
+  const days=Math.floor(d/864e5);d-=days*864e5;
+  const hrs=Math.floor(d/36e5);d-=hrs*36e5;
+  const min=Math.floor(d/6e4);const sec=Math.floor((d-min*6e4)/1e3);
+  $("cdD").textContent=days;$("cdH").textContent=String(hrs).padStart(2,"0");
+  $("cdM").textContent=String(min).padStart(2,"0");$("cdS").textContent=String(sec).padStart(2,"0");
+  $("stripCd").textContent=days>0?days+"d "+String(hrs).padStart(2,"0")+":"+String(min).padStart(2,"0")+":"+String(sec).padStart(2,"0"):String(hrs).padStart(2,"0")+":"+String(min).padStart(2,"0")+":"+String(sec).padStart(2,"0");
+  if(MATCH_TS-now<=0){$("cdNote").textContent="The decider is underway — enjoy the game! Predictions are now locked."}
+}
+setInterval(tick,1000);tick();
+
+/* ============ predictor ============ */
+const QUESTIONS=[
+  {id:"winner",q:"Who wins the decider?",help:"Series is 2–2. Pick the team you believe lifts the series.",opts:["India","West Indies"]},
+  {id:"toss",q:"Who wins the toss?",help:"Toss is at ~6:30 PM IST. With dew expected, the call matters.",opts:["India","West Indies"]},
+  {id:"sixes",q:"Total sixes in the match?",help:"Chinnaswamy has short boundaries and a flat pitch — sixes rain here.",opts:["Under 12","12–17","18–23","24 or more"]},
+  {id:"mom",q:"Player of the Match?",help:"Pick from India's squad, or back a West Indies star.",opts:["Shreyas Iyer","Abhishek Sharma","Sanju Samson","Shai Hope","Keemo Paul","Someone else"]},
+  {id:"firstinn",q:"First-innings total?",help:"High-scoring ground: 247 was posted in Hyderabad. What's par here?",opts:["Under 170","170–189","190–209","210 or more"]}
+];
+let preds=store.get("preds",{});
+function renderPreds(){
+  const grid=$("predGrid");grid.innerHTML="";
+  QUESTIONS.forEach(q=>{
+    const card=document.createElement("div");card.className="qcard";card.dataset.qid=q.id;
+    card.innerHTML=`<h3>${q.q}</h3><div class="qhelp">${q.help}</div><div class="opts"></div>`;
+    const box=card.querySelector(".opts");
+    q.opts.forEach(o=>{
+      const b=document.createElement("button");b.className="opt"+(preds[q.id]===o?" sel":"");b.textContent=o;
+      b.setAttribute("aria-pressed",preds[q.id]===o?"true":"false");
+      b.addEventListener("click",()=>{preds[q.id]=o;store.set("preds",preds);renderPreds();renderDrawer();});
+      box.appendChild(b);
+    });
+    grid.appendChild(card);
+  });
+}
+$("savePreds").addEventListener("click",()=>{
+  store.set("preds",preds);
+  const n=Object.keys(preds).length;
+  $("savePreds").textContent=n===5?"All 5 saved — good luck!":"Saved ("+n+"/5 answered)";
+  setTimeout(()=>{$("savePreds").textContent="Save my predictions"},2200);
+  renderDrawer();
+});
+$("clearPreds").addEventListener("click",()=>{preds={};store.set("preds",preds);renderPreds();renderDrawer();$("scoreBox").classList.remove("show")});
+$("scoreBtn").addEventListener("click",()=>{
+  const answered=Object.keys(preds).length;
+  if(answered<5){$("scoreBtn").textContent="Answer all 5 first ("+answered+"/5)";setTimeout(()=>{$("scoreBtn").textContent="Score my predictions"},2200);return}
+  const box=$("scoreBox");box.classList.add("show");
+  const rows=$("scoreRows");rows.innerHTML="";
+  let total=0;
+  QUESTIONS.forEach(q=>{
+    const row=document.createElement("div");row.className="score-row";
+    row.innerHTML=`<span style="flex:1"><b style="color:var(--cream)">${q.q}</b><br><span style="color:var(--muted)">Your pick: ${preds[q.id]}</span></span><span style="flex:0 0 auto"><select data-act="${q.id}" aria-label="Actual outcome for: ${q.q}" style="background:#100c07;color:var(--cream);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:13px"><option value="">Actual…</option>${q.opts.map(o=>`<option>${o}</option>`).join("")}</select> <span class="pts" data-pts="${q.id}">–</span></span>`;
+    rows.appendChild(row);
+  });
+  const verdict=document.createElement("div");verdict.id="scoreVerdict";rows.appendChild(verdict);
+  rows.querySelectorAll("select").forEach(sel=>{
+    sel.addEventListener("change",()=>{
+      const qid=sel.dataset.act;
+      const ptsEl=rows.querySelector(`[data-pts="${qid}"]`);
+      const hit=sel.value&&sel.value===preds[qid];
+      ptsEl.textContent=sel.value?(hit?"+20":"0"):"–";
+      total=0;let filled=0;
+      QUESTIONS.forEach(q=>{
+        const s=rows.querySelector(`select[data-act="${q.id}"]`);
+        if(s&&s.value){filled++;if(s.value===preds[q.id])total+=20}
+      });
+      $("scoreBig").innerHTML=total+'<span style="font-size:22px;color:var(--muted)">/100</span>';
+      const line=$("scoreLine");
+      if(filled<5){line.textContent="Fill in every actual outcome to get your final score."}
+      else{
+        line.textContent=total>=80?"Cricket oracle! You called the decider like a pundit.":total>=60?"Sharp reading of the game — the Chinnaswamy crowd salutes you.":total>=40?"Respectable. T20 is chaos; you tamed some of it.":"T20 humbles everyone. Run it back next series!";
+        if(total>=60)fireworks($("scoreBox"));
+      }
+    });
+  });
+  box.scrollIntoView({behavior:"smooth",block:"center"});
+});
+
+/* ============ drawer ============ */
+function renderDrawer(){
+  const b=$("drawerBody");
+  const keys=Object.keys(preds);
+  if(!keys.length){b.innerHTML='<div class="empty">No picks yet.<br>Head to <b>The Predictor Game</b> and make your five calls before the first ball.</div>';return}
+  b.innerHTML=QUESTIONS.map(q=>`<div class="score-row"><span><b style="color:var(--cream)">${q.q}</b><br><span style="color:var(--gold)">${preds[q.id]||'<span style="color:var(--muted)">not answered</span>'}</span></span></div>`).join("")+
+  `<p style="font-size:12.5px;color:var(--muted);margin-top:14px">Saved on this device only. Predictions lock at the first ball (Sat 7:00 PM IST).</p>`;
+}
+function openDrawer(o){$("drawer").classList.toggle("open",o);$("scrim").classList.toggle("show",o)}
+$("drawerFab").addEventListener("click",()=>{renderDrawer();openDrawer(true)});
+$("drawerClose").addEventListener("click",()=>openDrawer(false));
+$("scrim").addEventListener("click",()=>openDrawer(false));
+
+/* ============ squad ============ */
+const SQUAD=["Shreyas Iyer","Abhishek Sharma","Vaibhav Sooryavanshi","Ishan Kishan","Sanju Samson","Tilak Varma","Shivam Dube","Kuldeep Yadav","Axar Patel","Ravi Bishnoi","Nitish Kumar Reddy","Arshdeep Singh","Prince Yadav","Mayank Yadav","Naman Dhir","Bhuvneshwar Kumar"];
+(function(){
+  const rail=$("squadRail");
+  SQUAD.forEach(n=>{
+    const d=document.createElement("div");d.className="pcard";
+    const init=n.split(" ").map(w=>w[0]).join("");
+    d.innerHTML=`<div class="pavatar">${init}</div><b>${n}</b>${n==="Shreyas Iyer"?'<span class="cap">Captain</span>':""}${n==="Arshdeep Singh"?'<span class="role">Injury doubt — shoulder</span>':""}${n==="Bhuvneshwar Kumar"?'<span class="role">Added as cover</span>':""}`;
+    rail.appendChild(d);
+  });
+})();
+
+/* ============ quiz ============ */
+const QUIZ=[
+  {q:"The 5th T20I decider is being played at…",opts:["Eden Gardens, Kolkata","M. Chinnaswamy Stadium, Bengaluru","Wankhede Stadium, Mumbai","Arun Jaitley Stadium, Delhi"],a:1,ex:"Chinnaswamy in Bengaluru hosts the decider on Saturday, 17 October — famous for high-scoring T20 thrillers."},
+  {q:"What was the series score before the decider?",opts:["India 3–1","West Indies 3–1","Level 2–2","Level 1–1"],a:2,ex:"Two wins each: India took Lucknow and Indore; West Indies took Ranchi and Hyderabad."},
+  {q:"Who scored 102* off 50 balls in the 4th T20I?",opts:["Shreyas Iyer","Shai Hope","Sanju Samson","Abhishek Sharma"],a:1,ex:"West Indies captain Shai Hope's unbeaten hundred powered his side to 247/3 in Hyderabad."},
+  {q:"Who took a five-wicket haul in the 4th T20I?",opts:["Kuldeep Yadav","Ravi Bishnoi","Keemo Paul","Axar Patel"],a:2,ex:"Keemo Paul's five-fer restricted India to 223 and sealed a 24-run win for the visitors."},
+  {q:"What time does the decider start (IST)?",opts:["3:30 PM","5:00 PM","7:00 PM","8:00 PM"],a:2,ex:"First ball at 7:00 PM IST, with the toss at approximately 6:30 PM IST."},
+  {q:"Why might the toss-winning captain choose to chase at Chinnaswamy?",opts:["The pitch turns square","Evening dew helps the team batting second","Floodlights favour spinners","The outfield is slow"],a:1,ex:"Dew makes the ball hard to grip in the second innings — chasing sides have won 7 of the last 10 T20s here."},
+  {q:"Which bowler was added to India's squad as cover before the decider?",opts:["Bhuvneshwar Kumar","Mohammed Siraj","Jasprit Bumrah","Harshal Patel"],a:0,ex:"Bhuvneshwar Kumar, 36, returns to India's T20I setup as cover for Arshdeep Singh's shoulder injury."},
+  {q:"In T20 cricket, how many overs does each side normally bat?",opts:["10","15","20","50"],a:2,ex:"Twenty overs a side — the 'T20' in the name. Rain can reduce this, with DLS settling the result."}
+];
+let qi=0,qs=0,qdone=store.get("quizDone",false);
+function renderQ(){
+  const box=$("quizBox");
+  if(qi>=QUIZ.length){
+    const pct=Math.round(qs/QUIZ.length*100);
+    $("quizQ").textContent=`Quiz complete — you scored ${qs}/${QUIZ.length}!`;
+    $("quizBtns").innerHTML="";$("quizExplain").style.display="none";$("quizNext").style.display="none";
+    $("quizHelper").textContent=pct>=75?"Outstanding — decider-ready! Tap below to play again.":pct>=50?"Solid cricket brain. One more run?":"The decider will teach you. Play again!";
+    $("qProgFill").style.width="100%";
+    const again=document.createElement("button");again.className="btn btn-gold";again.textContent="Play again";
+    again.addEventListener("click",()=>{qi=0;qs=0;$("quizScore").textContent="Score: 0";renderQ()});
+    $("quizBtns").appendChild(again);
+    store.set("quizDone",true);store.set("quizBest",Math.max(qs,store.get("quizBest",0)));
+    return;
+  }
+  const Q=QUIZ[qi];
+  $("quizQ").textContent=Q.q;
+  $("qProgFill").style.width=(qi/QUIZ.length*100)+"%";
+  $("quizHelper").textContent=`Question ${qi+1} of ${QUIZ.length} — tap the answer you think is right.`;
+  $("quizExplain").style.display="none";$("quizNext").style.display="none";
+  const btns=$("quizBtns");btns.innerHTML="";
+  Q.opts.forEach((o,i)=>{
+    const b=document.createElement("button");b.className="qbtn";b.textContent=o;
+    b.addEventListener("click",()=>{
+      btns.querySelectorAll(".qbtn").forEach(x=>x.disabled=true);
+      if(i===Q.a){b.classList.add("right");qs++;$("quizScore").textContent="Score: "+qs}
+      else{b.classList.add("wrong");btns.children[Q.a].classList.add("right")}
+      const ex=$("quizExplain");ex.textContent=Q.ex;ex.style.display="block";
+      $("quizNext").style.display="inline-block";
+    });
+    btns.appendChild(b);
+  });
+}
+$("quizNext").addEventListener("click",()=>{qi++;renderQ()});
+renderQ();
+
+/* ============ conditions canvases ============ */
+function miniCanvas(id,fn){const c=$(id);if(!c)return;const x=c.getContext("2d");let t=0;
+  function size(){const r=c.parentElement.getBoundingClientRect();c.width=r.width;c.height=r.height}
+  size();addEventListener("resize",size);
+  (function loop(){t+=0.016;fn(x,c,t);requestAnimationFrame(loop)})()}
+miniCanvas("dewCanvas",(x,c,t)=>{
+  const w=c.width,h=c.height;x.fillStyle="#0f0b07";x.fillRect(0,0,w,h);
+  // moon + clouds + dew drops
+  x.fillStyle="rgba(250,243,231,0.9)";x.beginPath();x.arc(w*0.78,h*0.24,26,0,7);x.fill();
+  x.fillStyle="rgba(160,150,130,0.5)";
+  for(let i=0;i<4;i++){const cxp=(i*97+t*14)%(w+120)-60;x.beginPath();x.ellipse(cxp,h*0.2+i*26,44,13,0,0,7);x.fill()}
+  for(let i=0;i<40;i++){const dx=(i*61.7)%w,dy=h*0.55+((i*37.3)%(h*0.4));
+    x.fillStyle=`rgba(120,190,255,${0.25+0.35*Math.abs(Math.sin(t*2+i))})`;
+    x.beginPath();x.arc(dx,dy,2.6+1.4*Math.sin(t*2+i),0,7);x.fill()}
+  x.fillStyle="rgba(240,168,50,0.85)";x.font="700 13px Inter";x.fillText("Evening dew — chasing advantage",16,h-16);
+});
+miniCanvas("pitchCanvas",(x,c,t)=>{
+  const w=c.width,h=c.height;x.fillStyle="#0f0b07";x.fillRect(0,0,w,h);
+  // pitch strip
+  x.fillStyle="#2a2113";x.fillRect(w*0.44,10,w*0.12,h-20);
+  x.strokeStyle="rgba(250,243,231,0.5)";x.strokeRect(w*0.44,10,w*0.12,h-20);
+  // sixes arcs
+  for(let i=0;i<7;i++){const a=t*0.8+i*0.9;
+    const sx=w/2+Math.cos(a)*w*0.36, sy=h*0.5+Math.sin(a)*h*0.3;
+    x.fillStyle=`rgba(240,168,50,${0.5+0.4*Math.sin(t*3+i)})`;
+    x.beginPath();x.arc(sx,sy,4,0,7);x.fill()}
+  x.fillStyle="rgba(240,168,50,0.9)";x.font="700 13px Inter";x.fillText("Short boundaries — sixes expected",16,h-16);
+});
+
+/* ============ roar meter ============ */
+(function(){
+  let taps=0,best=store.get("roarBest",0),decaying;
+  const btn=$("roarBtn"),fill=$("roarFill"),cnt=$("roarCount");
+  const c=$("roarCanvas"),x=c.getContext("2d");let parts=[],t=0;
+  function size(){const r=c.parentElement.getBoundingClientRect();c.width=r.width;c.height=r.height}
+  size();addEventListener("resize",size);
+  function boom(){
+    for(let i=0;i<90;i++){
+      parts.push({x:c.width/2+(Math.random()-0.5)*120,y:c.height*0.35,a:Math.random()*Math.PI*2,
+        s:2+Math.random()*5,l:1,col:["#f0a832","#ff7a2f","#faf3e7","#2f5fe0"][i%4]});
+    }
+  }
+  (function loop(){
+    t+=0.016;x.clearRect(0,0,c.width,c.height);
+    parts=parts.filter(p=>p.l>0);
+    parts.forEach(p=>{p.x+=Math.cos(p.a)*p.s;p.y+=Math.sin(p.a)*p.s;p.s*=0.985;p.l-=0.012;
+      x.globalAlpha=Math.max(0,p.l);x.fillStyle=p.col;x.fillRect(p.x,p.y,3.4,3.4)});
+    x.globalAlpha=1;requestAnimationFrame(loop);
+  })();
+  function paint(){fill.style.width=Math.min(100,taps)+"%";cnt.textContent=`Taps: ${taps} · Best: ${best}`}
+  btn.addEventListener("click",()=>{
+    taps++;if(taps>best){best=taps;store.set("roarBest",best)}
+    paint();clearTimeout(decaying);
+    if(taps>=100){boom();taps=0;setTimeout(paint,300)}
+    else decaying=setTimeout(()=>{taps=Math.max(0,taps-25);paint()},1400);
+  });
+  paint();
+})();
+function fireworks(el){
+  const r=el.getBoundingClientRect();
+  for(let i=0;i<26;i++){
+    const s=document.createElement("div");
+    s.style.cssText=`position:fixed;left:${r.left+r.width/2}px;top:${r.top+60}px;width:8px;height:8px;border-radius:50%;background:${["#f0a832","#ff7a2f","#faf3e7"][i%3]};z-index:3000;pointer-events:none;transition:all 1.1s cubic-bezier(.2,.8,.3,1)`;
+    document.body.appendChild(s);
+    requestAnimationFrame(()=>{const a=Math.random()*Math.PI*2,d=90+Math.random()*130;
+      s.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d-60}px) scale(0.2)`;s.style.opacity="0"});
+    setTimeout(()=>s.remove(),1250);
+  }
+}
+
+/* ============ reveal on scroll ============ */
+(function(){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:0.12});
+  document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+})();
+
+/* ============ onboarding coach ============ */
+const COACH=[
+  "Welcome to DeciderHQ! This is your hub for the India vs West Indies T20 decider — Sat 17 Oct, 7 PM IST at Chinnaswamy.",
+  "Start with The Predictor Game: make your five calls before the first ball, then score yourself after the match.",
+  "Scroll on for the series story, India's squad, a quiz, conditions watch — and don't miss the Roar Meter at the end!"
+];
+let ci=0;
+function maybeCoach(){
+  if(store.get("coachSeen",false))return;
+  $("coachText").textContent=COACH[ci];
+  $("coach").classList.add("show");
+}
+$("cNext").addEventListener("click",()=>{
+  ci++;
+  if(ci>=COACH.length){$("coach").classList.remove("show");store.set("coachSeen",true)}
+  else $("coachText").textContent=COACH[ci];
+});
+$("cSkip").addEventListener("click",()=>{$("coach").classList.remove("show");store.set("coachSeen",true)});
+
+/* init */
+renderPreds();renderDrawer();tick();
+</script>
+</body>
+</html>
